@@ -1,0 +1,9 @@
+green-api:
+  host: https://api.green-api.com
+  hostMedia: https://media.green-api.com
+
+spring:
+  session:
+    store-type: redis
+    redis:
+      repository-type: default
