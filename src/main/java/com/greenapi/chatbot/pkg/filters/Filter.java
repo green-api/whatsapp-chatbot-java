@@ -4,7 +4,7 @@ import com.greenapi.client.pkg.models.notifications.*;
 
 import java.util.regex.Pattern;
 
-public class TypeFilter {
+public class Filter {
     public static boolean isIncomingMessageReceived(NotificationBody notificationBody) {
         return notificationBody instanceof MessageWebhook messageWebhook &&
             !messageWebhook.getSenderData().getSender().equals(messageWebhook.getInstanceData().getWid());

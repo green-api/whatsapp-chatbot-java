@@ -1,4 +1,4 @@
-package com.greenapi.chatbot.example_bot_scenes;
+package com.greenapi.chatbot.examples.full;
 
 import com.greenapi.chatbot.pkg.Scene;
 import com.greenapi.chatbot.pkg.state.State;
@@ -6,11 +6,10 @@ import com.greenapi.client.pkg.models.notifications.MessageWebhook;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class GreetingSceneExample extends Scene {
+public class FullStartScene extends Scene {
 
     @Override
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
-        log.info("GreetingSceneExample: start");
 
         var greetingText =
             """
@@ -27,12 +26,10 @@ public class GreetingSceneExample extends Scene {
         var resp = answerWithText(incomingMessage, greetingText, "/start");
         if (resp == null) {
             var sendMessageResp = answerWithText(incomingMessage, "Hi, this is test bot.\nPlease, send me a command - /start");
-            log.info("GreetingSceneExample: isn't \"/start\"" + sendMessageResp);
 
             return currentState;
         }
-        log.info("GreetingSceneExample: success: " + resp);
 
-        return activateNextScene(currentState, new MethodChooseSceneExample());
+        return activateNextScene(currentState, new ChooseScene());
     }
 }

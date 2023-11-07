@@ -6,28 +6,50 @@ import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.models.Contact;
 import com.greenapi.client.pkg.models.Option;
-import com.greenapi.client.pkg.models.notifications.IncomingBlock;
-import com.greenapi.client.pkg.models.notifications.IncomingCall;
-import com.greenapi.client.pkg.models.notifications.MessageWebhook;
-import com.greenapi.client.pkg.models.notifications.OutgoingMessageStatus;
+import com.greenapi.client.pkg.models.notifications.*;
 import com.greenapi.client.pkg.models.request.*;
 import com.greenapi.client.pkg.models.response.SendFileByUploadResp;
 import com.greenapi.client.pkg.models.response.SendMessageResp;
-import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.greenapi.chatbot.pkg.filters.TypeFilter.*;
+import static com.greenapi.chatbot.pkg.filters.Filter.isMessageTextExpected;
+import static com.greenapi.chatbot.pkg.filters.Filter.isMessageTextRegex;
 
-@Data
 @Log4j2
 public abstract class Scene {
-
     private GreenApi greenApi;
     private StateManager stateManager;
+
+    public final GreenApi getGreenApi() {
+        return greenApi;
+    }
+
+    public final StateManager getStateManager() {
+        return stateManager;
+    }
+
+    public final void setGreenApi(GreenApi greenApi) {
+        this.greenApi = greenApi;
+    }
+
+    public final void setStateManager(StateManager stateManager) {
+        this.stateManager = stateManager;
+    }
+
+    public static String getText(MessageWebhook messageWebhook) {
+        if (messageWebhook instanceof TextMessageWebhook msg) {
+            return msg.getMessageData().getTextMessageData().getTextMessage();
+
+        } else if (messageWebhook instanceof ExtendedTextMessageWebhook msg) {
+            return msg.getMessageData().getExtendedTextMessageData().getText();
+        }
+
+        return null;
+    }
 
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
         return currentState;
@@ -49,7 +71,7 @@ public abstract class Scene {
         return currentState;
     }
 
-    protected State activateNextScene(State currentState, Scene nextScene) {
+    protected final State activateNextScene(State currentState, Scene nextScene) {
         var updatedData = currentState.getData();
         nextScene.setStateManager(stateManager);
         nextScene.setGreenApi(greenApi);
@@ -59,7 +81,7 @@ public abstract class Scene {
         return currentState;
     }
 
-    protected State activateStartScene(State currentState) {
+    protected final State activateStartScene(State currentState) {
         var updatedData = currentState.getData();
         updatedData.put("scene", null);
         currentState.setData(updatedData);
@@ -67,9 +89,8 @@ public abstract class Scene {
         return currentState;
     }
 
-    public SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) {
         var chatId = messageWebhook.getSenderData().getChatId();
-        log.info("incoming message: " + messageWebhook.getIdMessage());
 
         var responseEntity = greenApi.sending.sendMessage(
             OutgoingMessage.builder()
@@ -85,7 +106,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    public SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage) {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithText(messageWebhook, text);
         }
@@ -93,7 +114,7 @@ public abstract class Scene {
         return null;
     }
 
-    public SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern) {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithText(messageWebhook, text);
         }
@@ -101,7 +122,7 @@ public abstract class Scene {
         return null;
     }
 
-    public SendFileByUploadResp answerWithUploadFile(String caption, File file, MessageWebhook messageWebhook) {
+    protected final SendFileByUploadResp answerWithUploadFile(String caption, File file, MessageWebhook messageWebhook) {
         var sender = messageWebhook.getSenderData().getSender();
         var responseEntity = greenApi.sending.sendFileByUpload(
             OutgoingFileByUpload.builder()
@@ -119,15 +140,15 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    public SendFileByUploadResp answerWithUploadFile(File file, MessageWebhook messageWebhook) {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) {
 
         return answerWithUploadFile(null, file, messageWebhook);
     }
 
-    public SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook,
-                                             String caption,
-                                             String url,
-                                             String fileName) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook,
+                                                      String caption,
+                                                      String url,
+                                                      String fileName) {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendFileByUrl(
             OutgoingFileByUrl.builder()
@@ -145,16 +166,16 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    public SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) {
 
         return answerWithUrlFile(messageWebhook, null, url, filename);
     }
 
-    public SendMessageResp answerWithLocation(MessageWebhook messageWebhook,
-                                              String nameLocation,
-                                              String address,
-                                              Double latitude,
-                                              Double longitude) {
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook,
+                                                       String nameLocation,
+                                                       String address,
+                                                       Double latitude,
+                                                       Double longitude) {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendLocation(
             OutgoingLocation.builder()
@@ -173,10 +194,10 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    public SendMessageResp answerWithPoll(MessageWebhook messageWebhook,
-                                          String message,
-                                          List<Option> options,
-                                          Boolean multipleAnswers) {
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook,
+                                                   String message,
+                                                   List<Option> options,
+                                                   Boolean multipleAnswers) {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendPoll(
             OutgoingPoll.builder()
@@ -194,7 +215,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    public SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) {
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendContact(
             OutgoingContact.builder()

@@ -6,7 +6,7 @@ import com.greenapi.client.pkg.api.webhook.WebhookHandler;
 import com.greenapi.client.pkg.models.notifications.*;
 import lombok.extern.log4j.Log4j2;
 
-import static com.greenapi.chatbot.pkg.filters.TypeFilter.*;
+import static com.greenapi.chatbot.pkg.filters.Filter.*;
 
 @Log4j2
 public abstract class BotHandler implements WebhookHandler {
@@ -17,6 +17,7 @@ public abstract class BotHandler implements WebhookHandler {
 
     @Override
     public void handle(Notification notification) {
+        log.info(notification.getBody());
 
         var notificationBody = notification.getBody();
 

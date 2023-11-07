@@ -34,7 +34,7 @@
     </developers>
     <properties>
         <java.version>17</java.version>
-        <whatsapp-api-client-java.version>0.1.0</whatsapp-api-client-java.version>
+        <whatsapp-api-client-java.version>0.1.1</whatsapp-api-client-java.version>
         <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
     <distributionManagement>

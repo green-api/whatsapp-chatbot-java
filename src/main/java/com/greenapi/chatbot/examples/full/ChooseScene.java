@@ -1,7 +1,7 @@
-package com.greenapi.chatbot.example_bot_scenes;
+package com.greenapi.chatbot.examples.full;
 
 import com.greenapi.chatbot.pkg.Scene;
-import com.greenapi.chatbot.pkg.filters.TypeFilter;
+import com.greenapi.chatbot.pkg.filters.Filter;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.Contact;
 import com.greenapi.client.pkg.models.Option;
@@ -11,25 +11,22 @@ import lombok.extern.log4j.Log4j2;
 import java.util.ArrayList;
 
 @Log4j2
-public class MethodChooseSceneExample extends Scene {
+public class ChooseScene extends Scene {
 
     @Override
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
-        log.info("MethodChooseSceneExample: start");
 
-        if (TypeFilter.isMessageTextExpected(incomingMessage, "1")) {
+        if (Filter.isMessageTextExpected(incomingMessage, "1")) {
             answerWithText(incomingMessage, "Hi! This is answerWithText!");
 
-            log.info("MethodChooseSceneExample: 1");
             return currentState;
 
-        } else if (TypeFilter.isMessageTextExpected(incomingMessage, "2")) {
+        } else if (Filter.isMessageTextExpected(incomingMessage, "2")) {
             answerWithText(incomingMessage, "Send me the link on File:");
 
-            log.info("MethodChooseSceneExample: 2");
-            return activateNextScene(currentState, new AnswerWithFileSceneExample());
+            return activateNextScene(currentState, new InputLinkScene());
 
-        } else if (TypeFilter.isMessageTextExpected(incomingMessage, "3")) {
+        } else if (Filter.isMessageTextExpected(incomingMessage, "3")) {
             var options = new ArrayList<Option>();
             options.add(new Option("Red"));
             options.add(new Option("Blue"));
@@ -38,16 +35,14 @@ public class MethodChooseSceneExample extends Scene {
 
             answerWithPoll(incomingMessage, "choose color", options, false);
 
-            log.info("MethodChooseSceneExample: 3");
             return currentState;
 
-        } else if (TypeFilter.isMessageTextExpected(incomingMessage, "4")) {
+        } else if (Filter.isMessageTextExpected(incomingMessage, "4")) {
             answerWithLocation(incomingMessage, "Home", "Cdad. de La Paz 2969, Buenos Aires", -34.5553558, -58.4642510);
 
-            log.info("MethodChooseSceneExample: 4");
             return currentState;
 
-        } else if (TypeFilter.isMessageTextExpected(incomingMessage, "5")) {
+        } else if (Filter.isMessageTextExpected(incomingMessage, "5")) {
             var contact = Contact.builder()
                 .firstName("first")
                 .lastName("last")
@@ -58,18 +53,17 @@ public class MethodChooseSceneExample extends Scene {
 
             answerWithContact(incomingMessage, contact);
 
-            log.info("MethodChooseSceneExample: 5");
             return currentState;
 
-        } else if (TypeFilter.isMessageTextExpected(incomingMessage, "6")) {
+        } else if (Filter.isMessageTextExpected(incomingMessage, "6")) {
 
-            answerWithText(incomingMessage, "Bie!");
+            answerWithText(incomingMessage, "Goodbye!");
 
-            log.info("MethodChooseSceneExample: exit");
             return activateStartScene(currentState);
         }
 
         answerWithText(incomingMessage, "Please send numbers - 1, 2, 3, 4, 5 or 6");
+
         return currentState;
     }
 }
