@@ -3,7 +3,6 @@ package com.greenapi.chatbot.examples;
 import com.greenapi.chatbot.pkg.BotHandler;
 import com.greenapi.client.pkg.models.notifications.DeviceInfo;
 import com.greenapi.client.pkg.models.notifications.StateInstanceChanged;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class HandlerExample extends BotHandler {

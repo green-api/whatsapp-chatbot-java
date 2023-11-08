@@ -1,7 +1,5 @@
 package com.greenapi.chatbot.examples;
 
-import com.greenapi.chatbot.HandlerExample;
-import com.greenapi.chatbot.WhatsappChatbotJavaApplication;
 import com.greenapi.chatbot.examples.full.FullStartScene;
 import com.greenapi.chatbot.pkg.BotFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,8 +7,8 @@ import org.springframework.boot.SpringApplication;
 //@SpringBootApplication
 public class BotStarterClassExample {
 
-    public static void example(String[] args) {
-        var context = SpringApplication.run(WhatsappChatbotJavaApplication.class, args);
+    public static void main(String[] args) {
+        var context = SpringApplication.run(BotStarterClassExample.class, args);
         var botFactory = context.getBean(BotFactory.class);
         var handlerExample = context.getBean(HandlerExample.class);
 

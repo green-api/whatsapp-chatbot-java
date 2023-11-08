@@ -13,15 +13,15 @@ public class FullStartScene extends Scene {
 
         var greetingText =
             """
-            Please, choose Scene's method and I execute it. 
-            
-            1. answerWithText();
-            2. answerWithUrlFile();
-            3. answerWithPoll();
-            4. answerWithLocation();
-            5. answerWithContact();
-            6. Exit.
-            """;
+                Please, choose Scene's method and I execute it. 
+                            
+                1. answerWithText();
+                2. answerWithUrlFile();
+                3. answerWithPoll();
+                4. answerWithLocation();
+                5. answerWithContact();
+                6. Exit.
+                """;
 
         var resp = answerWithText(incomingMessage, greetingText, "/start");
         if (resp == null) {

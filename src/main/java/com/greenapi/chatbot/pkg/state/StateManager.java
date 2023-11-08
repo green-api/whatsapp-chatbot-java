@@ -1,7 +1,5 @@
 package com.greenapi.chatbot.pkg.state;
 
-import com.greenapi.client.pkg.models.notifications.MessageWebhook;
-
 import java.util.Map;
 import java.util.Optional;
 
