@@ -253,7 +253,7 @@ public class EventStartScene extends Scene {
 
 Фильтрация по типу вебхука происходит автоматически с помощью переопределения нужных методов, как описано в пункте выше, но как фильтровать сообщения?
 
-Так как каждое уведомление автоматически кастится до java объекта вы можете фильтровать сообщения по любому полю объекта самостоятельно.
+Так как каждое уведомление автоматически кастится до java объекта, вы можете фильтровать сообщения по любому полю объекта самостоятельно.
 С описанием структуры объектов уведомлений можно ознакомиться по этой ссылке: [Документация](https://green-api.com/docs/api/receiving/notifications-format/type-webhook/)
 Для удобства все java объекты и поля названы аналогично документации:
 
@@ -274,6 +274,9 @@ public class EventStartScene extends Scene {
 | `ButtonsMessageWebhook`              | [ButtonsMessage](https://green-api.com/docs/api/receiving/notifications-format/incoming-message/ButtonsMessage/)                                          |
 | `ContactMessageWebhook`              | [ContactMessage](https://green-api.com/docs/api/receiving/notifications-format/incoming-message/ContactMessage/)                                          |
 | `ContactsArrayMessageWebhook`        | [ContactMessage](https://green-api.com/docs/api/receiving/notifications-format/incoming-message/ContactsArrayMessage/)                                    |
+| `TemplateButtonsReplyMessageWebhook` | [TemplateButtonsReplyMessage](https://green-api.com/docs/api/receiving/notifications-format/selected-buttons/TemplateButtonsReplyMessage/)                |
+| `ButtonsResponseMessageWebhook`      | [ButtonsResponseMessage](https://green-api.com/docs/api/receiving/notifications-format/selected-buttons/ButtonsResponseMessage/)                          |
+| `ListResponseMessageWebhook`         | [ListResponseMessage](https://green-api.com/docs/api/receiving/notifications-format/selected-buttons/ListResponseMessage/)                                |
 
 Вы можете самостоятельно проверить и преобразовать полученное уведомление в нужный вам тип.
 

@@ -259,23 +259,26 @@ Since each notification is automatically cast to a java object, you can filter m
 A description of the structure of notification objects can be found at this link: [Documentation](https://greenapi.com/en/docs/api/receiving/notifications-format/type-webhook/)
 For convenience, all java objects and fields are named similarly to the documentation:
 
-| Java object                   | Webhook's json object                                                                                                                                       |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `TextMessageWebhook`          | [TextMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/TextMessage/)                                                |
-| `TemplateMessageWebhook`      | [TemplateMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/TemplateMessage/)                                        |
-| `StickerMessageWebhook`       | [StickerMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/StickerMessage/)                                          |
-| `ReactionMessageWebhook`      | [ReactionMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ReactionMessage/)                                        |
-| `QuotedMessageWebhook`        | [QuotedMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/QuotedMessage/)                                            |
-| `PollUpdateMessageWebhook`    | [PollUpdateMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/PollUpdateMessage/)                                    |
-| `PollMessageWebhook`          | [PollMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/PollMessage/)                                                |
-| `LocationMessageWebhook`      | [LocationMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/LocationMessage/)                                        |
-| `ListMessageWebhook`          | [ListMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ListMessage/)                                                |
-| `GroupInviteMessageWebhook`   | [GroupInviteMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/GroupInviteMessage/)                                  |
-| `FileMessageWebhook`          | [imageMessage, videoMessage, documentMessage, audioMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ImageMessage/) |
-| `ExtendedTextMessageWebhook`  | [ExtendedTextMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ExtendedTextMessage/)                                |
-| `ButtonsMessageWebhook`       | [ButtonsMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ButtonsMessage/)                                          |
-| `ContactMessageWebhook`       | [ContactMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ContactMessage/)                                          |
-| `ContactsArrayMessageWebhook` | [ContactMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ContactsArrayMessage/)                                    |
+| Java object                           | Webhook's json object                                                                                                                                       |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `TextMessageWebhook`                  | [TextMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/TextMessage/)                                                |
+| `TemplateMessageWebhook`              | [TemplateMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/TemplateMessage/)                                        |
+| `StickerMessageWebhook`               | [StickerMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/StickerMessage/)                                          |
+| `ReactionMessageWebhook`              | [ReactionMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ReactionMessage/)                                        |
+| `QuotedMessageWebhook`                | [QuotedMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/QuotedMessage/)                                            |
+| `PollUpdateMessageWebhook`            | [PollUpdateMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/PollUpdateMessage/)                                    |
+| `PollMessageWebhook`                  | [PollMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/PollMessage/)                                                |
+| `LocationMessageWebhook`              | [LocationMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/LocationMessage/)                                        |
+| `ListMessageWebhook`                  | [ListMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ListMessage/)                                                |
+| `GroupInviteMessageWebhook`           | [GroupInviteMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/GroupInviteMessage/)                                  |
+| `FileMessageWebhook`                  | [imageMessage, videoMessage, documentMessage, audioMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ImageMessage/) |
+| `ExtendedTextMessageWebhook`          | [ExtendedTextMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ExtendedTextMessage/)                                |
+| `ButtonsMessageWebhook`               | [ButtonsMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ButtonsMessage/)                                          |
+| `ContactMessageWebhook`               | [ContactMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ContactMessage/)                                          |
+| `ContactsArrayMessageWebhook`         | [ContactMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/incoming-message/ContactsArrayMessage/)                                    |
+| `TemplateButtonsReplyMessageWebhook`  | [TemplateButtonsReplyMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/selected-buttons/TemplateButtonsReplyMessage/)                |
+| `ButtonsResponseMessageWebhook`       | [ButtonsResponseMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/selected-buttons/ButtonsResponseMessage/)                          |
+| `ListResponseMessageWebhook`          | [ListResponseMessage](https://greenapi.com/en/docs/api/receiving/notifications-format/selected-buttons/ListResponseMessage/)                                |
 
 You can independently check and convert the received notification to the type you need.
 
