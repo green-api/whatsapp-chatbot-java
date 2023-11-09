@@ -26,7 +26,7 @@ public abstract class BotHandler implements WebhookHandler {
             var messageWebhook = (MessageWebhook) notificationBody;
             var stateId = messageWebhook.getSenderData().getChatId();
 
-            var currentState = stateManager.getOrCreate(stateId);
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
             var scene = (Scene) currentState.getData().get("scene");
 
             if (scene == null) {
@@ -41,7 +41,7 @@ public abstract class BotHandler implements WebhookHandler {
             var messageWebhook = (MessageWebhook) notificationBody;
             var stateId = messageWebhook.getSenderData().getChatId();
 
-            var currentState = stateManager.getOrCreate(stateId);
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
             var scene = (Scene) currentState.getData().get("scene");
 
             if (scene == null) {
@@ -56,7 +56,7 @@ public abstract class BotHandler implements WebhookHandler {
             var messageStatusWebhook = (OutgoingMessageStatus) notificationBody;
             var stateId = messageStatusWebhook.getChatId();
 
-            var currentState = stateManager.getOrCreate(stateId);
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
             var scene = (Scene) currentState.getData().get("scene");
 
             if (scene == null) {
@@ -75,7 +75,7 @@ public abstract class BotHandler implements WebhookHandler {
             var incomingCall = (IncomingCall) notificationBody;
             var stateId = incomingCall.getFrom();
 
-            var currentState = stateManager.getOrCreate(stateId);
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
             var scene = (Scene) currentState.getData().get("scene");
 
             if (scene == null) {
@@ -90,7 +90,7 @@ public abstract class BotHandler implements WebhookHandler {
             var incomingBlock = (IncomingBlock) notificationBody;
             var stateId = incomingBlock.getChatId() + "@c.us";
 
-            var currentState = stateManager.getOrCreate(stateId);
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
             var scene = (Scene) currentState.getData().get("scene");
 
             if (scene == null) {

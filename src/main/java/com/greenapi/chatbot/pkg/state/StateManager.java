@@ -9,6 +9,8 @@ public interface StateManager {
 
     State create(String sender);
 
+    void update(String sender);
+
     void delete(String sender);
 
     Optional<Map<String, Object>> getStateData(String sender);
@@ -18,6 +20,4 @@ public interface StateManager {
     void updateStateData(String sender, Map<String, Object> stateData);
 
     void deleteStateData(String sender);
-
-    State getOrCreate(String sender);
 }

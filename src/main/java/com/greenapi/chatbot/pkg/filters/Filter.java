@@ -56,4 +56,8 @@ public class Filter {
 
         return false;
     }
+
+    public static boolean isSenderIdExpected(MessageWebhook messageWebhook, String expectedSenderId) {
+        return messageWebhook.getSenderData().getSender().equals(expectedSenderId);
+    }
 }

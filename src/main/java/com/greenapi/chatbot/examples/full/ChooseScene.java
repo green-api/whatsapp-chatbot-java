@@ -6,11 +6,9 @@ import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.Contact;
 import com.greenapi.client.pkg.models.Option;
 import com.greenapi.client.pkg.models.notifications.MessageWebhook;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 
-@Log4j2
 public class ChooseScene extends Scene {
 
     @Override
@@ -56,7 +54,6 @@ public class ChooseScene extends Scene {
             return currentState;
 
         } else if (Filter.isMessageTextExpected(incomingMessage, "6")) {
-
             answerWithText(incomingMessage, "Goodbye!");
 
             return activateStartScene(currentState);

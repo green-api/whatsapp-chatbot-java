@@ -1,3 +1,5 @@
 green-api:
   host: https://api.green-api.com
   hostMedia: https://media.green-api.com
+  instanceId: 1101848919
+  token: ${TOKEN}

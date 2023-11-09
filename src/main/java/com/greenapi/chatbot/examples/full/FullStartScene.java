@@ -3,11 +3,8 @@ package com.greenapi.chatbot.examples.full;
 import com.greenapi.chatbot.pkg.Scene;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.notifications.MessageWebhook;
-import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 public class FullStartScene extends Scene {
-
     @Override
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
 

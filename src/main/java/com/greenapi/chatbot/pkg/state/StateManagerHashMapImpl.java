@@ -1,69 +1,75 @@
 package com.greenapi.chatbot.pkg.state;
 
 import com.greenapi.chatbot.pkg.exception.BotStateException;
-import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@AllArgsConstructor
 public class StateManagerHashMapImpl implements StateManager {
-    private Map<String, State> storage;
+    private final Map<String, State> states;
+    private final Map<String, Object> initStateData;
 
-    @Override
-    public Optional<State> get(String sender) {
-        return Optional.ofNullable(storage.get(sender));
+    public StateManagerHashMapImpl() {
+        this.states = new HashMap<>();
+        this.initStateData = new HashMap<>();
+    }
+
+    public StateManagerHashMapImpl(Map<String, Object> initStateData) {
+        this.states = new HashMap<>();
+        this.initStateData = initStateData;
     }
 
     @Override
-    public State create(String sender) {
-        storage.put(sender, new State(new HashMap<>()));
-        return get(sender).orElseThrow(BotStateException::new);
+    public Optional<State> get(String chatId) {
+        return Optional.ofNullable(states.get(chatId));
     }
 
     @Override
-    public void delete(String sender) {
-        storage.remove(sender);
+    public State create(String chatId) {
+        states.put(chatId, new State(initStateData));
+        return get(chatId).orElseThrow(BotStateException::new);
     }
 
     @Override
-    public Optional<Map<String, Object>> getStateData(String sender) {
-        var state = storage.get(sender);
+    public void update(String chatId) {}
+
+    @Override
+    public void delete(String chatId) {
+        states.remove(chatId);
+    }
+
+    @Override
+    public Optional<Map<String, Object>> getStateData(String chatId) {
+        var state = states.get(chatId);
         return state != null ? Optional.ofNullable(state.getData()) : Optional.empty();
     }
 
     @Override
-    public void setStateData(String sender, Map<String, Object> stateData) {
-        var state = storage.get(sender);
+    public void setStateData(String chatId, Map<String, Object> stateData) {
+        var state = states.get(chatId);
         if (state != null) {
             state.setData(stateData);
         }
     }
 
     @Override
-    public void updateStateData(String sender, Map<String, Object> stateData) {
-        var state = storage.get(sender);
+    public void updateStateData(String chatId, Map<String, Object> newStateData) {
+        var state = states.get(chatId);
         if (state != null) {
             if (state.getData() == null) {
-                state.setData(stateData);
+                state.setData(newStateData);
             } else {
-                state.getData().putAll(stateData);
+                state.getData().putAll(newStateData);
             }
         }
     }
 
     @Override
-    public void deleteStateData(String sender) {
-        State state = storage.get(sender);
+    public void deleteStateData(String chatId) {
+        State state = states.get(chatId);
         if (state != null) {
-            state.setData(null);
+            state.setData(initStateData);
         }
-    }
-
-    @Override
-    public State getOrCreate(String stateId) {
-
-        return get(stateId).orElse(create(stateId));
     }
 }

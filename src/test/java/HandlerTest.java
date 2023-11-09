@@ -1,10 +1,11 @@
-package com.greenapi.chatbot.examples;
-
 import com.greenapi.chatbot.pkg.BotHandler;
 import com.greenapi.client.pkg.models.notifications.DeviceInfo;
 import com.greenapi.client.pkg.models.notifications.StateInstanceChanged;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.stereotype.Component;
 
-public class HandlerExample extends BotHandler {
+@TestComponent
+public class HandlerTest extends BotHandler {
 
     @Override
     public void processStateInstanceChanged(StateInstanceChanged stateInstanceChanged) {
