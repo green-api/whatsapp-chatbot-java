@@ -134,7 +134,7 @@ public abstract class Scene {
 
     protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) {
 
-        return answerWithUploadFile(messageWebhook,null, file);
+        return answerWithUploadFile(messageWebhook, null, file);
     }
 
     protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, String expectedMessage) {
@@ -180,7 +180,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook,  String caption, String url, String filename, Pattern regexPattern) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, Pattern regexPattern) {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithUrlFile(messageWebhook, caption, url, filename);
         }

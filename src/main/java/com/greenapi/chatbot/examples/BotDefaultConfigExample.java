@@ -6,8 +6,6 @@ import com.greenapi.chatbot.pkg.state.StateManagerHashMapImpl;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-
 //@Configuration
 public class BotDefaultConfigExample {
 

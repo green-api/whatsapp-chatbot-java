@@ -32,7 +32,8 @@ public class StateManagerHashMapImpl implements StateManager {
     }
 
     @Override
-    public void update(String chatId) {}
+    public void update(String chatId) {
+    }
 
     @Override
     public void delete(String chatId) {
