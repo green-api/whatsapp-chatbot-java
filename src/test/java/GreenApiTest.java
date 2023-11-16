@@ -27,8 +27,6 @@ public class GreenApiTest {
             botHandler,
             new FullStartScene());
 
-        bot.startReceivingNotifications();
-
         CompletableFuture.runAsync(bot::startReceivingNotifications);
 
         Thread.sleep(10000);
