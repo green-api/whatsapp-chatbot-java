@@ -16,7 +16,6 @@ public abstract class BotHandler implements WebhookHandler {
     protected StateManager stateManager;
     protected Scene startScene;
 
-    @Async
     @Override
     public void handle(Notification notification) {
         log.info(notification.getBody());

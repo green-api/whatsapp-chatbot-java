@@ -37,9 +37,9 @@ public class GreenApiTest {
 
         bot.startReceivingNotifications();
 
-//        CompletableFuture.runAsync(bot::startReceivingNotifications);
-//
-//        Thread.sleep(10000);
-//        bot.stopReceivingNotifications();
+        CompletableFuture.runAsync(bot::startReceivingNotifications);
+
+        Thread.sleep(10000);
+        bot.stopReceivingNotifications();
     }
 }
