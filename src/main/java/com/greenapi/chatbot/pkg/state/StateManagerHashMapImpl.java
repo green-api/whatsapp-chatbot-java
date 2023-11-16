@@ -27,7 +27,7 @@ public class StateManagerHashMapImpl implements StateManager {
 
     @Override
     public State create(String chatId) {
-        states.put(chatId, new State(initStateData));
+        states.put(chatId, new State(new HashMap<>(initStateData)));
         return get(chatId).orElseThrow(BotStateException::new);
     }
 
@@ -69,7 +69,7 @@ public class StateManagerHashMapImpl implements StateManager {
     public void deleteStateData(String chatId) {
         State state = states.get(chatId);
         if (state != null) {
-            state.setData(initStateData);
+            state.setData(new HashMap<>(initStateData));
         }
     }
 }

@@ -13,7 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @SpringBootTest(classes = {BotTestConfig.class, HandlerTest.class})
 @RequiredArgsConstructor
@@ -23,7 +27,8 @@ public class GreenApiTest {
     public void initBot(@Value("${green-api.instanceId}") String instanceId,
                         @Value("${green-api.token}") String instanceToken,
                         @Autowired BotFactory botFactory,
-                        @Autowired BotHandler botHandler) {
+                        @Autowired BotHandler botHandler) throws ExecutionException, InterruptedException {
+
         var bot = botFactory.createBot(
             instanceId,
             instanceToken,
@@ -31,5 +36,10 @@ public class GreenApiTest {
             new FullStartScene());
 
         bot.startReceivingNotifications();
+
+//        CompletableFuture.runAsync(bot::startReceivingNotifications);
+//
+//        Thread.sleep(10000);
+//        bot.stopReceivingNotifications();
     }
 }

@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Objects;
 
@@ -37,18 +38,19 @@ public class Bot {
 
     public void stopReceivingNotifications() {
         webhookConsumer.stop();
+        log.info("Receiving stopped");
     }
 
     private void deleteAllNotifications() {
         boolean cleaning = true;
 
-        log.info("deleting notifications");
+        log.info("deleting notifications...");
         while (cleaning) {
             var response = greenApi.receiving.receiveNotification();
 
             if (Objects.equals(response.getBody(), "null")) {
                 cleaning = false;
-                log.info("deleting notifications finished");
+                log.info("deleting notifications finished!");
 
             } else {
                 var notification = notificationMapper.get(response.getBody());

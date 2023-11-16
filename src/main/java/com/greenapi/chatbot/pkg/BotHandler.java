@@ -5,6 +5,7 @@ import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.api.webhook.WebhookHandler;
 import com.greenapi.client.pkg.models.notifications.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
 
 import static com.greenapi.chatbot.pkg.filters.Filter.*;
 
@@ -15,6 +16,7 @@ public abstract class BotHandler implements WebhookHandler {
     protected StateManager stateManager;
     protected Scene startScene;
 
+    @Async
     @Override
     public void handle(Notification notification) {
         log.info(notification.getBody());
