@@ -16,8 +16,6 @@ import java.util.Objects;
 @Builder
 @Log4j2
 public class Bot {
-
-    private Settings instanceSettings;
     private Boolean cleanNotificationQueue;
     private WebhookConsumer webhookConsumer;
     private NotificationMapper notificationMapper;

@@ -24,7 +24,6 @@ public class BotFactory {
                          BotHandler handler, Scene startScene, Boolean cleanNotificationQueue) {
 
         var greenApi = new GreenApi(restTemplate, hostMedia, host, instanceId, instanceToken);
-        var settings = greenApi.account.getSettings().getBody();
         var notificationMapper = new NotificationMapper();
         var webhookConsumer = new WebhookConsumer(greenApi, notificationMapper);
 
@@ -41,7 +40,6 @@ public class BotFactory {
             .notificationMapper(notificationMapper)
             .webhookConsumer(webhookConsumer)
             .cleanNotificationQueue(cleanNotificationQueue)
-            .instanceSettings(settings)
             .stateManager(stateManager)
             .startScene(startScene)
             .build();

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class StateManagerHashMapImpl implements StateManager {
-    private final Map<String, State> states;
+    private final Map<String, MapState> states;
     private final Map<String, Object> initStateData;
 
     public StateManagerHashMapImpl() {
@@ -26,9 +26,9 @@ public class StateManagerHashMapImpl implements StateManager {
     }
 
     @Override
-    public State create(String chatId) {
-        states.put(chatId, new State(new HashMap<>(initStateData)));
-        return get(chatId).orElseThrow(BotStateException::new);
+    public MapState create(String chatId) {
+        states.put(chatId, new MapState(new HashMap<>(initStateData)));
+        return (MapState) get(chatId).orElseThrow(BotStateException::new);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class StateManagerHashMapImpl implements StateManager {
 
     @Override
     public void deleteStateData(String chatId) {
-        State state = states.get(chatId);
+        MapState state = states.get(chatId);
         if (state != null) {
             state.setData(new HashMap<>(initStateData));
         }

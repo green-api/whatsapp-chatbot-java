@@ -2,6 +2,7 @@ package com.greenapi.chatbot.examples.full;
 
 import com.greenapi.chatbot.pkg.Scene;
 import com.greenapi.chatbot.pkg.filters.Filter;
+import com.greenapi.chatbot.pkg.state.MapState;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.Contact;
 import com.greenapi.client.pkg.models.Option;

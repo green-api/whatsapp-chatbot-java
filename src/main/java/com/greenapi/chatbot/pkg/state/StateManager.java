@@ -5,19 +5,19 @@ import java.util.Optional;
 
 public interface StateManager {
 
-    Optional<State> get(String sender);
+    Optional<State> get(String stateId);
 
-    State create(String sender);
+    MapState create(String stateId);
 
-    void update(String sender);
+    void update(String stateId);
 
-    void delete(String sender);
+    void delete(String stateId);
 
-    Optional<Map<String, Object>> getStateData(String sender);
+    Optional<Map<String, Object>> getStateData(String stateId);
 
-    void setStateData(String sender, Map<String, Object> stateData);
+    void setStateData(String stateId, Map<String, Object> stateData);
 
-    void updateStateData(String sender, Map<String, Object> stateData);
+    void updateStateData(String stateId, Map<String, Object> stateData);
 
-    void deleteStateData(String sender);
+    void deleteStateData(String stateId);
 }

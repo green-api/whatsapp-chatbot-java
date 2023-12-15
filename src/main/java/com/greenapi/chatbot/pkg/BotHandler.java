@@ -27,7 +27,7 @@ public abstract class BotHandler implements WebhookHandler {
             var stateId = messageWebhook.getSenderData().getChatId();
 
             var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = (Scene) currentState.getData().get("scene");
+            var scene = currentState.getScene();
 
             if (scene == null) {
                 scene = startScene;
@@ -42,7 +42,7 @@ public abstract class BotHandler implements WebhookHandler {
             var stateId = messageWebhook.getSenderData().getChatId();
 
             var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = (Scene) currentState.getData().get("scene");
+            var scene = currentState.getScene();
 
             if (scene == null) {
                 scene = startScene;
@@ -57,7 +57,7 @@ public abstract class BotHandler implements WebhookHandler {
             var stateId = messageStatusWebhook.getChatId();
 
             var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = (Scene) currentState.getData().get("scene");
+            var scene = currentState.getScene();
 
             if (scene == null) {
                 scene = startScene;
@@ -76,7 +76,7 @@ public abstract class BotHandler implements WebhookHandler {
             var stateId = incomingCall.getFrom();
 
             var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = (Scene) currentState.getData().get("scene");
+            var scene = currentState.getScene();
 
             if (scene == null) {
                 scene = startScene;
@@ -91,7 +91,7 @@ public abstract class BotHandler implements WebhookHandler {
             var stateId = incomingBlock.getChatId() + "@c.us";
 
             var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = (Scene) currentState.getData().get("scene");
+            var scene = currentState.getScene();
 
             if (scene == null) {
                 scene = startScene;

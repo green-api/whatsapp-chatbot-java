@@ -1,6 +1,7 @@
 package com.greenapi.chatbot.pkg;
 
 import com.greenapi.chatbot.pkg.exception.BotRequestException;
+import com.greenapi.chatbot.pkg.state.MapState;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
@@ -53,19 +54,15 @@ public abstract class Scene {
     }
 
     protected final State activateNextScene(State currentState, Scene nextScene) {
-        var updatedData = currentState.getData();
         nextScene.setStateManager(stateManager);
         nextScene.setGreenApi(greenApi);
-        updatedData.put("scene", nextScene);
-        currentState.setData(updatedData);
+        currentState.setScene(nextScene);
 
         return currentState;
     }
 
     protected final State activateStartScene(State currentState) {
-        var updatedData = currentState.getData();
-        updatedData.put("scene", null);
-        currentState.setData(updatedData);
+        currentState.setScene(null);
 
         return currentState;
     }

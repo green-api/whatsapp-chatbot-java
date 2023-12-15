@@ -1,6 +1,7 @@
 package com.greenapi.chatbot.examples.event;
 
 import com.greenapi.chatbot.pkg.Scene;
+import com.greenapi.chatbot.pkg.state.MapState;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.notifications.IncomingBlock;
 import com.greenapi.client.pkg.models.notifications.IncomingCall;

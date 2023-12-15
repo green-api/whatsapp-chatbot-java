@@ -1,6 +1,7 @@
 package com.greenapi.chatbot.examples.full;
 
 import com.greenapi.chatbot.pkg.Scene;
+import com.greenapi.chatbot.pkg.state.MapState;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.client.pkg.models.notifications.MessageWebhook;
 
@@ -22,7 +23,7 @@ public class FullStartScene extends Scene {
 
         var resp = answerWithText(incomingMessage, greetingText, "/start");
         if (resp == null) {
-            var sendMessageResp = answerWithText(incomingMessage, "Hi, this is test bot.\nPlease, send me a command - /start");
+            answerWithText(incomingMessage, "Hi, this is test bot.\nPlease, send me a command - /start");
 
             return currentState;
         }
