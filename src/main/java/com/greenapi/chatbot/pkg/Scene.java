@@ -1,7 +1,6 @@
 package com.greenapi.chatbot.pkg;
 
 import com.greenapi.chatbot.pkg.exception.BotRequestException;
-import com.greenapi.chatbot.pkg.state.MapState;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
@@ -78,7 +77,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
 
         var responseEntity = greenApi.sending.sendMessage(
@@ -95,7 +94,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithText(messageWebhook, text);
         }
@@ -103,7 +102,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern) {
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithText(messageWebhook, text);
         }
@@ -111,7 +110,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, String caption, File file) {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, String caption, File file) throws BotRequestException {
         var sender = messageWebhook.getSenderData().getSender();
         var responseEntity = greenApi.sending.sendFileByUpload(
             OutgoingFileByUpload.builder()
@@ -129,12 +128,12 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) throws BotRequestException {
 
         return answerWithUploadFile(messageWebhook, null, file);
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, String expectedMessage) {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithUploadFile(messageWebhook, caption, file);
         }
@@ -142,7 +141,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, Pattern regexPattern) {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithUploadFile(messageWebhook, caption, file);
         }
@@ -150,7 +149,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String fileName) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String fileName) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendFileByUrl(
             OutgoingFileByUrl.builder()
@@ -161,15 +160,19 @@ public abstract class Scene {
                 .quotedMessageId(messageWebhook.getIdMessage())
                 .build());
 
+        if (responseEntity.getStatusCode().isError()) {
+            throw new BotRequestException(responseEntity.getStatusCode());
+        }
+
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) throws BotRequestException {
 
         return answerWithUrlFile(messageWebhook, null, url, filename);
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, String expectedMessage) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithUrlFile(messageWebhook, caption, url, filename);
         }
@@ -177,7 +180,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, Pattern regexPattern) {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithUrlFile(messageWebhook, caption, url, filename);
         }
@@ -185,7 +188,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude) {
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendLocation(
             OutgoingLocation.builder()
@@ -204,7 +207,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, String expectedMessage) {
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude);
         }
@@ -212,7 +215,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, Pattern regexPattern) {
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude);
         }
@@ -220,7 +223,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers) {
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendPoll(
             OutgoingPoll.builder()
@@ -238,7 +241,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, String expectedMessage) {
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
             return answerWithPoll(messageWebhook, message, options, multipleAnswers);
         }
@@ -246,7 +249,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, Pattern regexPattern) {
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithPoll(messageWebhook, message, options, multipleAnswers);
         }
@@ -254,7 +257,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) {
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendContact(
             OutgoingContact.builder()
@@ -270,7 +273,7 @@ public abstract class Scene {
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, String expectedString) {
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, String expectedString) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedString)) {
             return answerWithContact(messageWebhook, contact);
         }
@@ -278,7 +281,7 @@ public abstract class Scene {
         return null;
     }
 
-    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, Pattern regexPattern) {
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
             return answerWithContact(messageWebhook, contact);
         }

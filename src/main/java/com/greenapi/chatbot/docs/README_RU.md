@@ -41,6 +41,7 @@ implementation group: 'com.green-api', name: 'whatsapp-chatbot-java', version: '
 Для этого вам понадобится создать свой класс конфигурации и добавить в него следующие бины:
 
 ```java
+
 @Configuration
 public class BotDefaultConfigExample {
 
@@ -109,6 +110,7 @@ green-api:
 С помощью данного класса и метода `createBot()` вы можете инициализировать объект бота:
 
 ```java
+
 @SpringBootApplication
 public class BotStarterClassExample {
 
@@ -190,6 +192,7 @@ public class BaseStartScene extends Scene {
 В этом примере бот имеет только одну сцену и ответит только на сообщение `message`.
 
 ```java
+
 @SpringBootApplication
 public class BotStarterClassExample {
 
@@ -220,6 +223,7 @@ public class BotStarterClassExample {
 Ссылка на пример: [EventStartScene.java](../examples/event/EventStartScene.java).
 
 ```java
+
 @Log4j2
 public class EventStartScene extends Scene {
 
@@ -230,13 +234,13 @@ public class EventStartScene extends Scene {
 
         return currentState;
     }
-    
+
     //  Для обработки исходящих сообщений
     @Override
     public State processOutgoingMessage(MessageWebhook outgoingMessage, State currentState) {
         return super.processOutgoingMessage(outgoingMessage, currentState);
     }
-    
+
     //  Для обработки статусов исходящих сообщений
     @Override
     public State processOutgoingMessageStatus(OutgoingMessageStatus outgoingMessageStatus, State currentState) {

@@ -4,10 +4,8 @@ import com.greenapi.chatbot.pkg.Scene;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Data
 @AllArgsConstructor

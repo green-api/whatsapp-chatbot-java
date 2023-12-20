@@ -17,92 +17,90 @@ public abstract class BotHandler implements WebhookHandler {
 
     @Override
     public void handle(Notification notification) {
-        log.info(notification.getBody());
 
         var notificationBody = notification.getBody();
 
-        if (isIncomingMessageReceived(notificationBody)) {
+        try {
 
-            var messageWebhook = (MessageWebhook) notificationBody;
-            var stateId = messageWebhook.getSenderData().getChatId();
+            if (isIncomingMessageReceived(notificationBody)) {
+                var messageWebhook = (MessageWebhook) notificationBody;
+                var stateId = messageWebhook.getSenderData().getChatId();
 
-            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = currentState.getScene();
+                var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+                var scene = currentState.getScene();
 
-            if (scene == null) {
-                scene = startScene;
+                if (scene == null) {
+                    scene = startScene;
+                }
+
+                var updatedState = scene.processIncomingMessage(messageWebhook, currentState);
+                stateManager.updateStateData(stateId, updatedState.getData());
+
+            } else if (isOutgoingMessageReceived(notificationBody)) {
+                var messageWebhook = (MessageWebhook) notificationBody;
+                var stateId = messageWebhook.getSenderData().getChatId();
+
+                var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+                var scene = currentState.getScene();
+
+                if (scene == null) {
+                    scene = startScene;
+                }
+
+                var updatedState = scene.processOutgoingMessage(messageWebhook, currentState);
+                stateManager.updateStateData(stateId, updatedState.getData());
+
+            } else if (isOutgoingMessageStatus(notificationBody)) {
+                var messageStatusWebhook = (OutgoingMessageStatus) notificationBody;
+                var stateId = messageStatusWebhook.getChatId();
+
+                var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+                var scene = currentState.getScene();
+
+                if (scene == null) {
+                    scene = startScene;
+                }
+
+                var updatedState = scene.processOutgoingMessageStatus(messageStatusWebhook, currentState);
+                stateManager.updateStateData(stateId, updatedState.getData());
+
+            } else if (isStateInstanceChanged(notificationBody)) {
+                processStateInstanceChanged((StateInstanceChanged) notificationBody);
+
+            } else if (isIncomingCall(notificationBody)) {
+                var incomingCall = (IncomingCall) notificationBody;
+                var stateId = incomingCall.getFrom();
+
+                var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+                var scene = currentState.getScene();
+
+                if (scene == null) {
+                    scene = startScene;
+                }
+
+                var updatedState = scene.processIncomingCall((IncomingCall) notificationBody, currentState);
+                stateManager.updateStateData(stateId, updatedState.getData());
+
+            } else if (isIncomingBlock(notificationBody)) {
+                var incomingBlock = (IncomingBlock) notificationBody;
+                var stateId = incomingBlock.getChatId() + "@c.us";
+
+                var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+                var scene = currentState.getScene();
+
+                if (scene == null) {
+                    scene = startScene;
+                }
+
+                var updatedState = scene.processIncomingBlock((IncomingBlock) notificationBody, currentState);
+                stateManager.updateStateData(stateId, updatedState.getData());
+
+            } else if (isDeviceInfo(notificationBody)) {
+                processDeviceInfo((DeviceInfo) notificationBody);
             }
-
-            var updatedState = scene.processIncomingMessage(messageWebhook, currentState);
-            stateManager.updateStateData(stateId, updatedState.getData());
-
-        } else if (isOutgoingMessageReceived(notificationBody)) {
-
-            var messageWebhook = (MessageWebhook) notificationBody;
-            var stateId = messageWebhook.getSenderData().getChatId();
-
-            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = currentState.getScene();
-
-            if (scene == null) {
-                scene = startScene;
-            }
-
-            var updatedState = scene.processOutgoingMessage(messageWebhook, currentState);
-            stateManager.updateStateData(stateId, updatedState.getData());
-
-        } else if (isOutgoingMessageStatus(notificationBody)) {
-
-            var messageStatusWebhook = (OutgoingMessageStatus) notificationBody;
-            var stateId = messageStatusWebhook.getChatId();
-
-            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = currentState.getScene();
-
-            if (scene == null) {
-                scene = startScene;
-            }
-
-            var updatedState = scene.processOutgoingMessageStatus(messageStatusWebhook, currentState);
-            stateManager.updateStateData(stateId, updatedState.getData());
-
-        } else if (isStateInstanceChanged(notificationBody)) {
-
-            processStateInstanceChanged((StateInstanceChanged) notificationBody);
-
-        } else if (isIncomingCall(notificationBody)) {
-
-            var incomingCall = (IncomingCall) notificationBody;
-            var stateId = incomingCall.getFrom();
-
-            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = currentState.getScene();
-
-            if (scene == null) {
-                scene = startScene;
-            }
-
-            var updatedState = scene.processIncomingCall((IncomingCall) notificationBody, currentState);
-            stateManager.updateStateData(stateId, updatedState.getData());
-
-        } else if (isIncomingBlock(notificationBody)) {
-
-            var incomingBlock = (IncomingBlock) notificationBody;
-            var stateId = incomingBlock.getChatId() + "@c.us";
-
-            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
-            var scene = currentState.getScene();
-
-            if (scene == null) {
-                scene = startScene;
-            }
-
-            var updatedState = scene.processIncomingBlock((IncomingBlock) notificationBody, currentState);
-            stateManager.updateStateData(stateId, updatedState.getData());
-
-        } else if (isDeviceInfo(notificationBody)) {
-
-            processDeviceInfo((DeviceInfo) notificationBody);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 

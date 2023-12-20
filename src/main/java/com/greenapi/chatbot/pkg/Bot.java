@@ -4,7 +4,6 @@ import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.api.webhook.NotificationMapper;
 import com.greenapi.client.pkg.api.webhook.WebhookConsumer;
-import com.greenapi.client.pkg.models.response.Settings;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
