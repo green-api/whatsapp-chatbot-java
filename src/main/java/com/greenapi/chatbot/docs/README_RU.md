@@ -121,8 +121,9 @@ public class BotStarterClassExample {
         var bot = botFactory.createBot(
             "{{instanceId}}",
             "{{token}}",
-            new HandlerExample(),
-            new FullStartScene());
+            new HandlerExample());
+
+        bot.setStartScene(new FullStartScene());
     }
 }
 ```
@@ -132,30 +133,29 @@ public class BotStarterClassExample {
 `handler` и `startScene` это объекты ваших классов в которых вы должны будете реализовать логику вашего бота.
 
 `handler` - объект класса, который наследуется от абстрактного класса `BotHandler`. Вы можете переопределить в нем
-методы,
-которые отвечают за обработку вебхуков о состоянии инстанса и девайса `StateInstanceChanged` и `DeviceInfo`.
-Если вы не хотите обрабатывать эти типы уведомлений, просто не переопределяйте методы, оставьте класс пустым или
-вызовите аналогичные методы суперкласса.
+методы, которые отвечают за обработку вебхуков о состоянии инстанса и девайса `StateInstanceChanged` и `DeviceInfo`.
+Если вы не хотите обрабатывать эти типы уведомлений, вы можете просто не указывать handler в конструкторе, и использовать реализацию по умолчанию:
 
 ```java
-public class HandlerExample extends BotHandler {
+public class BotStarterClassExample {
+    public static void main(String[] args) {
+        var context = SpringApplication.run(BotStarterClassExample.class, args);
+        var botFactory = context.getBean(BotFactory.class);
 
-    @Override
-    public void processStateInstanceChanged(StateInstanceChanged stateInstanceChanged) {
-        super.processStateInstanceChanged(stateInstanceChanged);
-    }
+        var bot = botFactory.createBot(
+            "{{instanceId}}",
+            "{{token}}");
 
-    @Override
-    public void processDeviceInfo(DeviceInfo deviceInfo) {
-        super.processDeviceInfo(deviceInfo);
+        bot.setStartScene(new FullStartScene());
+
+        bot.startReceivingNotifications();
     }
 }
 ```
 
-`startScene` - это стартовая сцена с которой начинается общение с ботом. Сцена - это объект класса, который наследуется
-от
-абстрактного класса `Scene`. Внутри сцен происходит обработка вебхуков и выполняется ваша бизнес-логика.
-Ваш бот будет состоять из набора сцен, которые выполняются друг за другом в заданной вами последовательности.
+`startScene` - это стартовая сцена с которой начинается общение с ботом. Она устанавливается сеттером `bot.setStartScene(new YourStartScene());`
+Сцена - это объект класса, который наследуется от абстрактного класса `Scene`. Внутри сцен происходит обработка вебхуков и выполняется ваша бизнес-логика.
+Ваш бот будет состоять из нескольких сцен, которые выполняются друг за другом в заданной вами последовательности.
 Для каждого состояния одновременно может быть активна только одна сцена.
 Примеры сцен будут продемонстрированы ниже.
 
@@ -192,7 +192,6 @@ public class BaseStartScene extends Scene {
 В этом примере бот имеет только одну сцену и ответит только на сообщение `message`.
 
 ```java
-
 @SpringBootApplication
 public class BotStarterClassExample {
 
@@ -202,9 +201,9 @@ public class BotStarterClassExample {
 
         var bot = botFactory.createBot(
             "{{instanceId}}",
-            "{{token}}",
-            new HandlerExample(),
-            new BaseStartScene());
+            "{{token}}");
+
+        bot.setStartScene(new BaseStartScene());
 
         bot.startReceivingNotifications();
     }

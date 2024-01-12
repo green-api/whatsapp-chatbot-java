@@ -13,9 +13,9 @@ public class BotStarterClassExample {
 
         var bot = botFactory.createBot(
             "{{instanceId}}",
-            "{{token}}",
-            new HandlerExample(),
-            new FullStartScene());
+            "{{token}}");
+
+        bot.setStartScene(new FullStartScene());
 
         bot.startReceivingNotifications();
     }

@@ -1,6 +1,7 @@
+import com.greenapi.chatbot.examples.DefaultHandler;
+import com.greenapi.chatbot.examples.echo.EchoStartScene;
 import com.greenapi.chatbot.examples.full.FullStartScene;
 import com.greenapi.chatbot.pkg.BotFactory;
-import com.greenapi.chatbot.pkg.BotHandler;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,23 +10,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
-@SpringBootTest(classes = {BotTestConfig.class, HandlerTest.class})
+@SpringBootTest(classes = {BotTestConfig.class, DefaultHandler.class})
 @RequiredArgsConstructor
 @TestComponent
 public class GreenApiTest {
     @Test
     public void initBot(@Value("${green-api.instanceId}") String instanceId,
                         @Value("${green-api.token}") String instanceToken,
-                        @Autowired BotFactory botFactory,
-                        @Autowired BotHandler botHandler) throws ExecutionException, InterruptedException {
+                        @Autowired BotFactory botFactory) throws InterruptedException {
 
         var bot = botFactory.createBot(
             instanceId,
-            instanceToken,
-            botHandler,
-            new FullStartScene());
+            instanceToken);
+
+        bot.setStartScene(new EchoStartScene());
 
         CompletableFuture.runAsync(bot::startReceivingNotifications);
 

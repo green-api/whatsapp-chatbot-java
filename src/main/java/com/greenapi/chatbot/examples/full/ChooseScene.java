@@ -13,12 +13,13 @@ public class ChooseScene extends Scene {
     @Override
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
         var text = getText(incomingMessage);
-        if (text == null) {
-            answerWithText(incomingMessage, "PLease send a text message!");
+
+        if (text.isEmpty()) {
+            answerWithText(incomingMessage, "Please send a text message!");
             return currentState;
         }
 
-        switch (text) {
+        switch (text.get()) {
             case "1" -> {
                 answerWithText(incomingMessage, "Hi! This is answerWithText!");
                 return currentState;

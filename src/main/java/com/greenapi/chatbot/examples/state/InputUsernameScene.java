@@ -10,7 +10,7 @@ public class InputUsernameScene extends Scene {
         var stateData = currentState.getData();
 
         var username = getText(incomingMessage);
-        if (username != null && username.length() <= 20 && username.length() >= 5) {
+        if (username.isPresent() && username.get().length() <= 20 && username.get().length() >= 5) {
             stateData.put("username", username);
             currentState.setData(stateData);
 

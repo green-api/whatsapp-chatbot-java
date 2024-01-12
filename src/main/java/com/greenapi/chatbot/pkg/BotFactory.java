@@ -1,5 +1,6 @@
 package com.greenapi.chatbot.pkg;
 
+import com.greenapi.chatbot.examples.DefaultHandler;
 import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.api.webhook.NotificationMapper;
@@ -21,18 +22,14 @@ public class BotFactory {
 
 
     public Bot createBot(String instanceId, String instanceToken,
-                         BotHandler handler, Scene startScene, Boolean cleanNotificationQueue) {
+                         BotHandler handler, Boolean cleanNotificationQueue) {
 
         var greenApi = new GreenApi(restTemplate, hostMedia, host, instanceId, instanceToken);
         var notificationMapper = new NotificationMapper();
         var webhookConsumer = new WebhookConsumer(greenApi, notificationMapper);
 
-        startScene.setGreenApi(greenApi);
-        startScene.setStateManager(stateManager);
-
         handler.greenApi = greenApi;
         handler.stateManager = stateManager;
-        handler.startScene = startScene;
 
         return Bot.builder()
             .greenApi(greenApi)
@@ -41,13 +38,16 @@ public class BotFactory {
             .webhookConsumer(webhookConsumer)
             .cleanNotificationQueue(cleanNotificationQueue)
             .stateManager(stateManager)
-            .startScene(startScene)
             .build();
     }
 
-    public Bot createBot(String instanceId, String instanceToken,
-                         BotHandler handler, Scene startScene) {
+    public Bot createBot(String instanceId, String instanceToken, BotHandler handler) {
 
-        return createBot(instanceId, instanceToken, handler, startScene, true);
+        return createBot(instanceId, instanceToken, handler, true);
+    }
+
+    public Bot createBot(String instanceId, String instanceToken) {
+
+        return createBot(instanceId, instanceToken, new DefaultHandler(), true);
     }
 }

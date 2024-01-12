@@ -36,6 +36,8 @@
         <java.version>17</java.version>
         <whatsapp-api-client-java.version>0.1.4</whatsapp-api-client-java.version>
         <snakeyaml.version>2.2</snakeyaml.version>
+        <logback-classic.version>1.4.14</logback-classic.version>
+        <logback-core.version>1.4.14</logback-core.version>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -64,6 +66,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback-core.version}</version>
         </dependency>
     </dependencies>
 

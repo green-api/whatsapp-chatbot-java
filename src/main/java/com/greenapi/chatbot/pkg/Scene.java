@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.greenapi.chatbot.pkg.filters.Filter.isMessageTextExpected;
@@ -66,15 +67,15 @@ public abstract class Scene {
         return currentState;
     }
 
-    protected static String getText(MessageWebhook messageWebhook) {
+    protected static Optional<String> getText(MessageWebhook messageWebhook) {
         if (messageWebhook instanceof TextMessageWebhook msg) {
-            return msg.getMessageData().getTextMessageData().getTextMessage();
+            return msg.getMessageData().getTextMessageData().getTextMessage().describeConstable();
 
         } else if (messageWebhook instanceof ExtendedTextMessageWebhook msg) {
-            return msg.getMessageData().getExtendedTextMessageData().getText();
+            return msg.getMessageData().getExtendedTextMessageData().getText().describeConstable();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) throws BotRequestException {

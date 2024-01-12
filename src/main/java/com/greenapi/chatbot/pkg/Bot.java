@@ -54,4 +54,12 @@ public class Bot {
             }
         }
     }
+
+    public void setStartScene(Scene scene) {
+        this.startScene = scene;
+
+        startScene.setGreenApi(greenApi);
+        startScene.setStateManager(stateManager);
+        botHandler.startScene = startScene;
+    }
 }

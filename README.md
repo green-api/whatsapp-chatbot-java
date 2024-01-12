@@ -107,6 +107,7 @@ green-api:
 Using this class and the `createBot()` method you can initialize a bot object:
 
 ```java
+
 @SpringBootApplication
 public class BotStarterClassExample {
 
@@ -117,8 +118,9 @@ public class BotStarterClassExample {
          var bot = botFactory.createBot(
              "{{instanceId}}",
              "{{token}}",
-             new HandlerExample(),
-             new FullStartScene());
+             new HandlerExample());
+
+         bot.setStartScene(new FullStartScene());
      }
 }
 ```
@@ -127,28 +129,30 @@ The `createBot()` method has four parameters:
 `instanceId` and `token` must be taken from the parameters of your instance in your personal account.
 `handler` and `startScene` are objects of your classes in which you will need to implement the logic of your bot.
 
-`handler` is a class object that inherits from the abstract class `BotHandler`. You can override methods in it,
-which are responsible for processing webhooks about the state of the instance and device `StateInstanceChanged` and `DeviceInfo`.
-If you don't want to handle these types of notifications, simply don't override the methods, leave the class empty, or call similar superclass methods.
+`handler` is a class object that inherits from the abstract class `BotHandler`. You can override in it
+methods that are responsible for processing webhooks about the state of the instance and device `StateInstanceChanged` and `DeviceInfo`.
+If you don't want to handle these types of notifications, you can simply omit the handler in the constructor, and use the default implementation:
 
 ```java
-public class HandlerExample extends BotHandler {
+public class BotStarterClassExample {
+     public static void main(String[] args) {
+         var context = SpringApplication.run(BotStarterClassExample.class, args);
+         var botFactory = context.getBean(BotFactory.class);
 
-     @Override
-     public void processStateInstanceChanged(StateInstanceChanged stateInstanceChanged) {
-         super.processStateInstanceChanged(stateInstanceChanged);
-     }
+         var bot = botFactory.createBot(
+             "{{instanceId}}",
+             "{{token}}");
 
-     @Override
-     public void processDeviceInfo(DeviceInfo deviceInfo) {
-         super.processDeviceInfo(deviceInfo);
+         bot.setStartScene(new FullStartScene());
+
+         bot.startReceivingNotifications();
      }
 }
 ```
 
-`startScene` is the starting scene from which communication with the bot begins. Scene is a class object that inherits from
-abstract class `Scene`. Inside the scenes, webhooks are processed and your business logic is executed.
-Your bot will consist of a set of scenes that are executed one after another in the sequence you specify.
+`startScene` is the starting scene from which communication with the bot begins. It is set by the setter `bot.setStartScene(new YourStartScene());`
+A scene is a class object that inherits from the abstract class `Scene`. Inside the scenes, webhooks are processed and your business logic is executed.
+Your bot will consist of several scenes that are executed one after another in the sequence you specify.
 Only one scene can be active at a time per state.
 Sample scenes will be shown below.
 

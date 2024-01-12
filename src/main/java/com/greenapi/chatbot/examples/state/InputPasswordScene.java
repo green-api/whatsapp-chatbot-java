@@ -10,7 +10,7 @@ public class InputPasswordScene extends Scene {
         var stateData = currentState.getData();
 
         var password = getText(incomingMessage);
-        if (password != null && password.length() <= 20 && password.length() >= 8) {
+        if (password.isPresent() && password.get().length() <= 20 && password.get().length() >= 8) {
             stateData.put("password", password);
             currentState.setData(stateData);
 

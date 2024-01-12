@@ -9,12 +9,13 @@ public class InputLinkScene extends Scene {
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
         var fileUrl = getText(incomingMessage);
 
-        if (fileUrl != null) {
+        if (fileUrl.isPresent()) {
             try {
-                answerWithUrlFile(incomingMessage, "This is your file!", fileUrl, "testFile");
+                answerWithUrlFile(incomingMessage, "This is your file!", fileUrl.get(), "testFile");
             } catch (Exception e) {
                 answerWithText(incomingMessage, "invalid link! Please send me a link, for example https://greenapi.com");
             }
+
         } else {
             answerWithText(incomingMessage, "Please send me a link!");
 
