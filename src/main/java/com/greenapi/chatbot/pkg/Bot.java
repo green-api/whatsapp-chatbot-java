@@ -7,6 +7,7 @@ import com.greenapi.client.pkg.api.webhook.WebhookConsumer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Objects;
@@ -37,6 +38,7 @@ public class Bot {
         log.info("Receiving stopped");
     }
 
+    @SneakyThrows
     private void deleteAllNotifications() {
         boolean cleaning = true;
 
@@ -55,6 +57,7 @@ public class Bot {
                 }
             } catch (Exception e) {
                 log.error("Unexpected error: " + e.getMessage());
+                Thread.sleep(5000);
             }
         }
     }
