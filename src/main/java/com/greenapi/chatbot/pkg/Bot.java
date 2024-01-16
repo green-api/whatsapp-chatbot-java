@@ -42,15 +42,19 @@ public class Bot {
 
         log.info("deleting notifications...");
         while (cleaning) {
-            var response = greenApi.receiving.receiveNotification();
+            try {
+                var response = greenApi.receiving.receiveNotification();
 
-            if (Objects.equals(response.getBody(), "null")) {
-                cleaning = false;
-                log.info("deleting notifications finished!");
+                if (Objects.equals(response.getBody(), "null")) {
+                    cleaning = false;
+                    log.info("deleting notifications finished!");
 
-            } else {
-                var notification = notificationMapper.get(response.getBody());
-                greenApi.receiving.deleteNotification(notification.getReceiptId());
+                } else {
+                    var notification = notificationMapper.get(response.getBody());
+                    greenApi.receiving.deleteNotification(notification.getReceiptId());
+                }
+            } catch (Exception e) {
+                log.error("Unexpected error: " + e.getMessage());
             }
         }
     }

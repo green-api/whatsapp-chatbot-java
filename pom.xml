@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.green-api</groupId>
     <artifactId>whatsapp-chatbot-java</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>whatsapp-chatbot-java</name>
     <description>whatsapp-chatbot-java</description>
     <licenses>
@@ -34,7 +34,7 @@
     </developers>
     <properties>
         <java.version>17</java.version>
-        <whatsapp-api-client-java.version>0.1.4</whatsapp-api-client-java.version>
+        <whatsapp-api-client-java.version>0.1.5</whatsapp-api-client-java.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <logback-classic.version>1.4.14</logback-classic.version>
         <logback-core.version>1.4.14</logback-core.version>
@@ -61,12 +61,10 @@
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
