@@ -21,7 +21,7 @@ public class Bot {
     private NotificationMapper notificationMapper;
     private BotHandler botHandler;
     private Scene startScene;
-    private GreenApi greenApi;
+    public GreenApi greenApi;
     private StateManager stateManager;
 
     public void startReceivingNotifications() {

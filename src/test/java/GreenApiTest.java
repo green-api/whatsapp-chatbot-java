@@ -1,6 +1,5 @@
 import com.greenapi.chatbot.examples.DefaultHandler;
 import com.greenapi.chatbot.examples.echo.EchoStartScene;
-import com.greenapi.chatbot.examples.full.FullStartScene;
 import com.greenapi.chatbot.pkg.BotFactory;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
