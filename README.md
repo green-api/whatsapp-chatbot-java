@@ -35,6 +35,16 @@ Gradle
 implementation group: 'com.green-api', name: 'whatsapp-chatbot-java', version: 'version'
 ```
 
+## Setup
+
+Before launching the bot you should enable incoming notifications in instance settings by using <a href="https://green-api.com/en/docs/api/account/SetSettings/">SetSettings method</a>.
+
+```
+"incomingWebhook": "yes",
+"outgoingMessageWebhook": "yes",
+"outgoingAPIMessageWebhook": "yes",
+```
+
 ## Examples
 
 ### How to initialize an object
