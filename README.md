@@ -265,6 +265,12 @@ public class EventStartScene extends Scene {
 }
 ```
 
+### Receive webhooks via HTTP API
+
+You can get incoming webhooks (messages, statuses) via HTTP API requests in the similar way as the rest of the Green API methods are implemented. Herewith, the chronological order of the webhooks following is guaranteed in the sequence in which they were received FIFO. All incoming webhooks are stored in the queue and are expected to be received within 24 hours.
+
+To get incoming webhooks, you have to sequentially call two methods <a href="https://green-api.com/en/docs/api/receiving/technology-http-api/ReceiveNotification/">ReceiveNotification</a> and <a href="https://green-api.com/en/docs/api/receiving/technology-http-api/DeleteNotofication/">DeleteNotification</a>. ReceiveNotification method receives an incoming webhook. DeleteNotification method confirms successful webhook receipt and processing. To learn more about the methods, refer to respective ReceiveNotification and DeleteNotification sections.
+
 ### How to filter incoming messages
 
 Filtering by webhook type occurs automatically by overriding the necessary methods, as described in the paragraph above, but how to filter messages?
