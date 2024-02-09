@@ -78,40 +78,57 @@ public abstract class Scene {
         return Optional.empty();
     }
 
-    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) throws BotRequestException {
+
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
 
         var responseEntity = greenApi.sending.sendMessage(
             OutgoingMessage.builder()
                 .chatId(chatId)
                 .message(text)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
+    }
+
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text) throws BotRequestException {
+        return answerWithText(messageWebhook, text, true);
+    }
+
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedMessage)) {
+            return answerWithText(messageWebhook, text, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithText(messageWebhook, text, isQuote);
+        }
+        return null;
     }
 
     protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
-            return answerWithText(messageWebhook, text);
+            return answerWithText(messageWebhook, text, true);
         }
-
         return null;
     }
 
     protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithText(messageWebhook, text);
+            return answerWithText(messageWebhook, text, true);
         }
-
         return null;
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, String caption, File file) throws BotRequestException {
+
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, String caption, File file, Boolean isQuote) throws BotRequestException {
         var sender = messageWebhook.getSenderData().getSender();
         var responseEntity = greenApi.sending.sendFileByUpload(
             OutgoingFileByUpload.builder()
@@ -119,38 +136,61 @@ public abstract class Scene {
                 .file(file)
                 .fileName(file.getName())
                 .caption(caption)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
     }
 
-    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) throws BotRequestException {
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, Boolean isQuote) throws BotRequestException {
+        return answerWithUploadFile(messageWebhook, null, file, isQuote);
+    }
 
-        return answerWithUploadFile(messageWebhook, null, file);
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, Boolean isQuote) throws BotRequestException {
+        return answerWithUploadFile(messageWebhook, caption, file, isQuote);
+    }
+
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, String expectedMessage, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedMessage)) {
+            return answerWithUploadFile(messageWebhook, caption, file, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithUploadFile(messageWebhook, caption, file, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file) throws BotRequestException {
+        return answerWithUploadFile(messageWebhook, null, file, true);
+    }
+
+    protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption) throws BotRequestException {
+        return answerWithUploadFile(messageWebhook, caption, file, true);
     }
 
     protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
-            return answerWithUploadFile(messageWebhook, caption, file);
+            return answerWithUploadFile(messageWebhook, caption, file, true);
         }
-
         return null;
     }
 
     protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, File file, String caption, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithUploadFile(messageWebhook, caption, file);
+            return answerWithUploadFile(messageWebhook, caption, file, true);
         }
-
         return null;
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String fileName) throws BotRequestException {
+
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String fileName, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendFileByUrl(
             OutgoingFileByUrl.builder()
@@ -158,38 +198,57 @@ public abstract class Scene {
                 .urlFile(url)
                 .fileName(fileName)
                 .caption(caption)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
     }
 
-    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) throws BotRequestException {
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename, Boolean isQuote) throws BotRequestException {
+        return answerWithUrlFile(messageWebhook, null, url, filename, isQuote);
+    }
 
-        return answerWithUrlFile(messageWebhook, null, url, filename);
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, String expectedMessage, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedMessage)) {
+            return answerWithUrlFile(messageWebhook, caption, url, filename, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithUrlFile(messageWebhook, caption, url, filename, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String url, String filename) throws BotRequestException {
+        return answerWithUrlFile(messageWebhook, null, url, filename, true);
+    }
+
+    protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename) throws BotRequestException {
+        return answerWithUrlFile(messageWebhook, caption, url, filename, true);
     }
 
     protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
-            return answerWithUrlFile(messageWebhook, caption, url, filename);
+            return answerWithUrlFile(messageWebhook, caption, url, filename, true);
         }
-
         return null;
     }
 
     protected final SendMessageResp answerWithUrlFile(MessageWebhook messageWebhook, String caption, String url, String filename, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithUrlFile(messageWebhook, caption, url, filename);
+            return answerWithUrlFile(messageWebhook, caption, url, filename, true);
         }
-
         return null;
     }
 
-    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude) throws BotRequestException {
+
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendLocation(
             OutgoingLocation.builder()
@@ -198,95 +257,142 @@ public abstract class Scene {
                 .address(address)
                 .latitude(latitude)
                 .longitude(longitude)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
+    }
+
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude) throws BotRequestException {
+        return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude, true);
     }
 
     protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
-            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude);
+            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude, true);
         }
-
         return null;
     }
 
     protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude);
+            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude, true);
         }
-
         return null;
     }
 
-    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers) throws BotRequestException {
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, String expectedMessage, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedMessage)) {
+            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithLocation(messageWebhook, nameLocation, address, latitude, longitude, isQuote);
+        }
+        return null;
+    }
+
+
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendPoll(
             OutgoingPoll.builder()
                 .chatId(chatId)
                 .options(options)
                 .multipleAnswers(multipleAnswers)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .message(message)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
+    }
+
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers) throws BotRequestException {
+        return answerWithPoll(messageWebhook, message, options, multipleAnswers, true);
+    }
+
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, String expectedMessage, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedMessage)) {
+            return answerWithPoll(messageWebhook, message, options, multipleAnswers, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithPoll(messageWebhook, message, options, multipleAnswers, isQuote);
+        }
+        return null;
     }
 
     protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, String expectedMessage) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedMessage)) {
-            return answerWithPoll(messageWebhook, message, options, multipleAnswers);
+            return answerWithPoll(messageWebhook, message, options, multipleAnswers, true);
         }
-
         return null;
     }
 
     protected final SendMessageResp answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithPoll(messageWebhook, message, options, multipleAnswers);
+            return answerWithPoll(messageWebhook, message, options, multipleAnswers, true);
         }
-
         return null;
     }
 
-    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) throws BotRequestException {
+
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendContact(
             OutgoingContact.builder()
                 .chatId(chatId)
                 .contact(contact)
-                .quotedMessageId(messageWebhook.getIdMessage())
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
                 .build());
 
         if (responseEntity.getStatusCode().isError()) {
             throw new BotRequestException(responseEntity.getStatusCode());
         }
-
         return responseEntity.getBody();
+    }
+
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact) throws BotRequestException {
+            return answerWithContact(messageWebhook, contact, true);
     }
 
     protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, String expectedString) throws BotRequestException {
         if (isMessageTextExpected(messageWebhook, expectedString)) {
-            return answerWithContact(messageWebhook, contact);
+            return answerWithContact(messageWebhook, contact, true);
         }
-
         return null;
     }
 
     protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, Pattern regexPattern) throws BotRequestException {
         if (isMessageTextRegex(messageWebhook, regexPattern)) {
-            return answerWithContact(messageWebhook, contact);
+            return answerWithContact(messageWebhook, contact, true);
         }
+        return null;
+    }
 
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, String expectedString, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextExpected(messageWebhook, expectedString)) {
+            return answerWithContact(messageWebhook, contact, isQuote);
+        }
+        return null;
+    }
+
+    protected final SendMessageResp answerWithContact(MessageWebhook messageWebhook, Contact contact, Pattern regexPattern, Boolean isQuote) throws BotRequestException {
+        if (isMessageTextRegex(messageWebhook, regexPattern)) {
+            return answerWithContact(messageWebhook, contact, isQuote);
+        }
         return null;
     }
 }
