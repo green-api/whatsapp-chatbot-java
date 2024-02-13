@@ -129,7 +129,7 @@ public abstract class Scene {
 
 
     protected final SendFileByUploadResp answerWithUploadFile(MessageWebhook messageWebhook, String caption, File file, Boolean isQuote) throws BotRequestException {
-        var sender = messageWebhook.getSenderData().getSender();
+        var sender = messageWebhook.getSenderData().getChatId();
         var responseEntity = greenApi.sending.sendFileByUpload(
             OutgoingFileByUpload.builder()
                 .chatId(sender)
