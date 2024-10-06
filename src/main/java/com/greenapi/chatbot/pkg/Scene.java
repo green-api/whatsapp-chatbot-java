@@ -78,6 +78,22 @@ public abstract class Scene {
         return Optional.empty();
     }
 
+    protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Boolean isQuote, Boolean linkPreview) throws BotRequestException {
+        var chatId = messageWebhook.getSenderData().getChatId();
+
+        var responseEntity = greenApi.sending.sendMessage(
+            OutgoingMessage.builder()
+                .chatId(chatId)
+                .message(text)
+                .quotedMessageId(isQuote ? messageWebhook.getIdMessage() : null)
+                .linkPreview(linkPreview)
+                .build());
+
+        if (responseEntity.getStatusCode().isError()) {
+            throw new BotRequestException(responseEntity.getStatusCode());
+        }
+        return responseEntity.getBody();
+    }
 
     protected final SendMessageResp answerWithText(MessageWebhook messageWebhook, String text, Boolean isQuote) throws BotRequestException {
         var chatId = messageWebhook.getSenderData().getChatId();
