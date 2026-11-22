@@ -1,5 +1,6 @@
 package com.greenapi.chatbot.pkg;
 
+import com.greenapi.chatbot.pkg.calls.BotCalls;
 import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.api.webhook.NotificationMapper;
@@ -22,6 +23,7 @@ public class Bot {
     private BotHandler botHandler;
     private Scene startScene;
     public GreenApi greenApi;
+    public BotCalls calls;
     private StateManager stateManager;
 
     public void startReceivingNotifications() {
@@ -35,6 +37,7 @@ public class Bot {
 
     public void stopReceivingNotifications() {
         webhookConsumer.stop();
+        calls.close();
         log.info("Receiving stopped");
     }
 
@@ -67,6 +70,7 @@ public class Bot {
 
         startScene.setGreenApi(greenApi);
         startScene.setStateManager(stateManager);
+        startScene.setCalls(calls);
         botHandler.startScene = startScene;
     }
 }

@@ -1,6 +1,7 @@
 package com.greenapi.chatbot.pkg;
 
 import com.greenapi.chatbot.examples.DefaultHandler;
+import com.greenapi.chatbot.pkg.calls.BotCalls;
 import com.greenapi.chatbot.pkg.state.StateManager;
 import com.greenapi.client.pkg.api.GreenApi;
 import com.greenapi.client.pkg.api.webhook.NotificationMapper;
@@ -33,6 +34,7 @@ public class BotFactory {
 
         return Bot.builder()
             .greenApi(greenApi)
+            .calls(new BotCalls(greenApi))
             .botHandler(handler)
             .notificationMapper(notificationMapper)
             .webhookConsumer(webhookConsumer)

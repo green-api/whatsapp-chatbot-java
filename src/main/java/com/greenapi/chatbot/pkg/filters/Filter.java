@@ -27,6 +27,10 @@ public class Filter {
         return notificationBody instanceof IncomingCall;
     }
 
+    public static boolean isOutgoingCall(NotificationBody notificationBody) {
+        return notificationBody instanceof OutgoingCall;
+    }
+
     public static boolean isIncomingBlock(NotificationBody notificationBody) {
         return notificationBody instanceof IncomingBlock;
     }

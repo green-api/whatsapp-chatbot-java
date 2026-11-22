@@ -270,6 +270,78 @@ public class EventStartScene extends Scene {
 }
 ```
 
+### Как отвечать на звонки и звонить
+
+Бот может отвечать на голосовые звонки WhatsApp, звонить в чаты и проигрывать звук в звонок: только звонки 1:1, один
+звонок за раз, на тарифах со звонками. Исходящие звонки работают только в чаты, которые писали или звонили инстансу за
+последние 72 часа. Документация по звонкам: [WhatsApp Calling API](https://green-api.com/docs/calls/).
+
+Включите уведомления о звонках в настройках инстанса:
+
+```
+"incomingCallWebhook": "yes",
+"outgoingCallWebhook": "yes",
+```
+
+Для звука звонка нужна необязательная зависимость [webrtc-java](https://github.com/devopvoid/webrtc-java), она работает
+без звуковой карты:
+
+```xml
+<dependency>
+    <groupId>dev.onvoid.webrtc</groupId>
+    <artifactId>webrtc-java</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+В этой сцене бот отвечает на входящие звонки приветствием и перезванивает человеку, когда он пишет `call me`.
+
+Ссылка на пример: [CallsStartScene.java](../examples/calls/CallsStartScene.java).
+
+```java
+@Log4j2
+public class CallsStartScene extends Scene {
+
+    @Override
+    public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
+        if (answerWithText(incomingMessage, "Calling you", Pattern.compile("^call me$", Pattern.CASE_INSENSITIVE)) != null) {
+            callChat(incomingMessage.getSenderData().getChatId(),
+                calls -> calls.play(Path.of("src/main/resources/data/greeting.wav")));
+        }
+
+        return currentState;
+    }
+
+    @Override
+    public State processIncomingCall(IncomingCall incomingCall, State currentState) {
+        log.info("Incoming call from " + incomingCall.getFrom() + ": " + incomingCall.getStatus());
+
+        if (incomingCall.getStatus().equals("offer")) {
+            answerCall(calls -> calls.play(Path.of("src/main/resources/data/greeting.wav")));
+        }
+
+        return currentState;
+    }
+
+    @Override
+    public State processOutgoingCall(OutgoingCall outgoingCall, State currentState) {
+        log.info("Outgoing call to " + outgoingCall.getFrom() + ": " + outgoingCall.getStatus());
+
+        return currentState;
+    }
+}
+```
+
+- `answerCall(conversation)` принимает входящий звонок, `callChat(chatId, conversation)` звонит в чат. Оба метода сразу
+  возвращают ID звонка. Разговор выполняется в потоке звонков бота, когда звонок соединится, поэтому бот продолжает
+  обрабатывать сообщения, а когда разговор завершается, бот кладёт трубку.
+- Разговор получает `CallsConnection` клиента: `play()` проигрывает WAV-файл (16-бит PCM, для других форматов нужен
+  ffmpeg), `sendPcm()` отправляет живой звук, а `CallsListener.onRemotePcm()` получает его. Подробнее:
+  [голосовые звонки в whatsapp-api-client-java](https://github.com/green-api/whatsapp-api-client-java#how-to-make-and-receive-voice-calls).
+- `rejectCall()` отклоняет входящий звонок, `hangUpCall()` завершает текущий звонок.
+- `processIncomingCall` и `processOutgoingCall` получают все статусы звонка: `offer`, `pickUp`, `hangUp`, `missed`,
+  `declined` и другие.
+
 ### Получение уведомлений через HTTP API
 
 Получать входящие уведомления (сообщения, статусы) можно через HTTP API запросы по аналогии, как реализованы остальные методы Green API. При этом гарантируется хронологический порядок следования уведомлений в той последовательности, в которой они были получены FIFO. Все входящие уведомления сохраняются в очереди и ожидают своего получения в течение 24 часов.
@@ -618,6 +690,10 @@ public class InputLinkScene extends Scene {
 | `answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude)` | Отправляет геолокация в ответ на входящее сообщение.                                         |
 | `answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers)`              | Отправляет опрос в ответ на входящее сообщение.                                              |
 | `answerWithContact(MessageWebhook messageWebhook, Contact contact)`                                                         | Отправляет контакт в ответ на входящее сообщение.                                            |
+| `answerCall(CallConversation conversation)`                                                                                 | Принимает входящий звонок и выполняет в нём разговор.                                        |
+| `callChat(String chatId, CallConversation conversation)`                                                                    | Звонит в чат и выполняет разговор, когда человек ответит.                                    |
+| `rejectCall()`                                                                                                              | Отклоняет входящий звонок.                                                                   |
+| `hangUpCall()`                                                                                                              | Завершает текущий звонок.                                                                    |
 
 > В перегруженном варианте методы ответов на сообщения могут содержать дополнительные параметры `expectedMessage`
 > и `regexPattern`.

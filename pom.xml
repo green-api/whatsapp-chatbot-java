@@ -34,10 +34,11 @@
     </developers>
     <properties>
         <java.version>17</java.version>
-        <whatsapp-api-client-java.version>0.1.8</whatsapp-api-client-java.version>
+        <whatsapp-api-client-java.version>0.3.0</whatsapp-api-client-java.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <logback-classic.version>1.4.14</logback-classic.version>
         <logback-core.version>1.4.14</logback-core.version>
+        <webrtc-java.version>1.0.1</webrtc-java.version>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -50,6 +51,12 @@
             <groupId>com.green-api</groupId>
             <artifactId>whatsapp-api-client-java</artifactId>
             <version>${whatsapp-api-client-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.onvoid.webrtc</groupId>
+            <artifactId>webrtc-java</artifactId>
+            <version>${webrtc-java.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

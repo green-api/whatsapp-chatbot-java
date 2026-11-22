@@ -269,6 +269,78 @@ public class EventStartScene extends Scene {
 }
 ```
 
+### How to answer and make voice calls
+
+The bot can answer WhatsApp voice calls, call chats and play audio into the call: 1:1 calls only, one call at a time, on
+plans that include calls. Outgoing calls work only to chats that wrote or called the instance in the last 72 hours.
+Calls documentation: [WhatsApp Calling API](https://green-api.com/en/docs/calls/).
+
+Enable the call notifications in the instance settings:
+
+```
+"incomingCallWebhook": "yes",
+"outgoingCallWebhook": "yes",
+```
+
+The call audio needs the optional dependency [webrtc-java](https://github.com/devopvoid/webrtc-java), it works without
+sound hardware:
+
+```xml
+<dependency>
+    <groupId>dev.onvoid.webrtc</groupId>
+    <artifactId>webrtc-java</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+In this scene the bot answers incoming calls with a greeting and calls the person back when they write `call me`.
+
+Link to example: [CallsStartScene.java](src/main/java/com/greenapi/chatbot/examples/calls/CallsStartScene.java).
+
+```java
+@Log4j2
+public class CallsStartScene extends Scene {
+
+    @Override
+    public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
+        if (answerWithText(incomingMessage, "Calling you", Pattern.compile("^call me$", Pattern.CASE_INSENSITIVE)) != null) {
+            callChat(incomingMessage.getSenderData().getChatId(),
+                calls -> calls.play(Path.of("src/main/resources/data/greeting.wav")));
+        }
+
+        return currentState;
+    }
+
+    @Override
+    public State processIncomingCall(IncomingCall incomingCall, State currentState) {
+        log.info("Incoming call from " + incomingCall.getFrom() + ": " + incomingCall.getStatus());
+
+        if (incomingCall.getStatus().equals("offer")) {
+            answerCall(calls -> calls.play(Path.of("src/main/resources/data/greeting.wav")));
+        }
+
+        return currentState;
+    }
+
+    @Override
+    public State processOutgoingCall(OutgoingCall outgoingCall, State currentState) {
+        log.info("Outgoing call to " + outgoingCall.getFrom() + ": " + outgoingCall.getStatus());
+
+        return currentState;
+    }
+}
+```
+
+- `answerCall(conversation)` accepts the incoming call and `callChat(chatId, conversation)` calls a chat. Both return
+  the call ID at once. The conversation runs on the call thread of the bot when the call connects, so the bot keeps
+  handling messages, and the bot hangs up when the conversation returns.
+- The conversation gets the `CallsConnection` of the client: `play()` plays a WAV file (16-bit PCM, other formats need
+  ffmpeg), `sendPcm()` sends live audio and `CallsListener.onRemotePcm()` receives it. See
+  [voice calls in whatsapp-api-client-java](https://github.com/green-api/whatsapp-api-client-java#how-to-make-and-receive-voice-calls).
+- `rejectCall()` rejects the incoming call, `hangUpCall()` ends the current call.
+- `processIncomingCall` and `processOutgoingCall` get every status of the call: `offer`, `pickUp`, `hangUp`, `missed`,
+  `declined` and others.
+
 ### Receive webhooks via HTTP API
 
 You can get incoming webhooks (messages, statuses) via HTTP API requests in the similar way as the rest of the Green API methods are implemented. Herewith, the chronological order of the webhooks following is guaranteed in the sequence in which they were received FIFO. All incoming webhooks are stored in the queue and are expected to be received within 24 hours.
@@ -605,6 +677,10 @@ public class InputLinkScene extends Scene {
 | `answerWithLocation(MessageWebhook messageWebhook, String nameLocation, String address, Double latitude, Double longitude)` | Sends geolocation in response to an incoming message.                                          |
 | `answerWithPoll(MessageWebhook messageWebhook, String message, List<Option> options, Boolean multipleAnswers)`              | Sends a poll in response to an incoming message.                                               |
 | `answerWithContact(MessageWebhook messageWebhook, Contact contact)`                                                         | Sends a contact in response to an incoming message.                                            |
+| `answerCall(CallConversation conversation)`                                                                                 | Accepts the incoming call and runs the conversation in it.                                     |
+| `callChat(String chatId, CallConversation conversation)`                                                                    | Calls a chat and runs the conversation when the person answers.                                |
+| `rejectCall()`                                                                                                              | Rejects the incoming call.                                                                     |
+| `hangUpCall()`                                                                                                              | Ends the current call.                                                                         |
 
 > In the overloaded version, message response methods may contain additional parameters `expectedMessage` and `regexPattern`.
 > If the text of the incoming message matches the condition, the method will be executed and return the method response according to the documentation, if not, then the method will return `null`.

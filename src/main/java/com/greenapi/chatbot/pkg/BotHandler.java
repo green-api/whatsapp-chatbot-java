@@ -99,6 +99,20 @@ public abstract class BotHandler implements WebhookHandler {
             var updatedState = scene.processIncomingCall((IncomingCall) notificationBody, currentState);
             stateManager.updateStateData(stateId, updatedState.getData());
 
+        } else if (isOutgoingCall(notificationBody)) {
+            var outgoingCall = (OutgoingCall) notificationBody;
+            var stateId = outgoingCall.getFrom();
+
+            var currentState = stateManager.get(stateId).orElse(stateManager.create(stateId));
+            var scene = currentState.getScene();
+
+            if (scene == null) {
+                scene = startScene;
+            }
+
+            var updatedState = scene.processOutgoingCall(outgoingCall, currentState);
+            stateManager.updateStateData(stateId, updatedState.getData());
+
         } else if (isIncomingBlock(notificationBody)) {
             var incomingBlock = (IncomingBlock) notificationBody;
             var stateId = incomingBlock.getChatId() + "@c.us";

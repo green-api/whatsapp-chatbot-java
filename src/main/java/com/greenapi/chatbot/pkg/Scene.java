@@ -1,5 +1,7 @@
 package com.greenapi.chatbot.pkg;
 
+import com.greenapi.chatbot.pkg.calls.BotCalls;
+import com.greenapi.chatbot.pkg.calls.CallConversation;
 import com.greenapi.chatbot.pkg.exception.BotRequestException;
 import com.greenapi.chatbot.pkg.state.State;
 import com.greenapi.chatbot.pkg.state.StateManager;
@@ -24,6 +26,7 @@ import static com.greenapi.chatbot.pkg.filters.Filter.isMessageTextRegex;
 public abstract class Scene {
     protected GreenApi greenApi;
     protected StateManager stateManager;
+    protected BotCalls calls;
 
     public final void setGreenApi(GreenApi greenApi) {
         this.greenApi = greenApi;
@@ -31,6 +34,10 @@ public abstract class Scene {
 
     public final void setStateManager(StateManager stateManager) {
         this.stateManager = stateManager;
+    }
+
+    public final void setCalls(BotCalls calls) {
+        this.calls = calls;
     }
 
     public State processIncomingMessage(MessageWebhook incomingMessage, State currentState) {
@@ -49,6 +56,10 @@ public abstract class Scene {
         return currentState;
     }
 
+    public State processOutgoingCall(OutgoingCall outgoingCall, State currentState) {
+        return currentState;
+    }
+
     public State processIncomingBlock(IncomingBlock incomingBlock, State currentState) {
         return currentState;
     }
@@ -56,9 +67,26 @@ public abstract class Scene {
     protected final State activateNextScene(State currentState, Scene nextScene) {
         nextScene.setStateManager(stateManager);
         nextScene.setGreenApi(greenApi);
+        nextScene.setCalls(calls);
         currentState.setScene(nextScene);
 
         return currentState;
+    }
+
+    protected final String answerCall(CallConversation conversation) {
+        return calls.answer(conversation);
+    }
+
+    protected final String callChat(String chatId, CallConversation conversation) {
+        return calls.dial(chatId, conversation);
+    }
+
+    protected final String rejectCall() {
+        return calls.reject();
+    }
+
+    protected final String hangUpCall() {
+        return calls.hangUp();
     }
 
     protected final State activateStartScene(State currentState) {
